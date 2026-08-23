@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en" data-theme="carbon">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="TypeSpeed - A premium, ultra-fast multiplayer typing game and profiler with real-time statistics, mechanical typing sound effects, interactive keyboards, and custom weak-area training.">
+    <meta name="theme-color" content="#111216">
+    <title>TypeSpeed // Elite Multiplayer Typing Arena</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <!-- Main Decorative Glows -->
+    <div class="glow-bg glow-primary" aria-hidden="true"></div>
+    <div class="glow-bg glow-secondary" aria-hidden="true"></div>
+
+    <div class="app-shell">
+      <!-- App Header -->
+      <header class="app-header">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span>TS</span>
+            <div class="pulse-ring"></div>
+          </div>
+          <div>
+            <h1>TypeSpeed<span class="brand-accent">.io</span></h1>
+            <p id="sessionStatus">Solo Lab Ready</p>
+          </div>
+        </div>
+
+        <div class="top-controls">
+          <!-- Sound Profile Select -->
+          <div class="control-tab-group" aria-label="Keyboard sound profiles">
+            <span class="control-label-inline"><svg viewBox="0 0 24 24"><path d="M12 6L8 10H4v4h4l4 4V6zM15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Sound</span>
+            <select id="soundSelect" class="styled-select-inline">
+              <option value="mute" selected>Muted</option>
+              <option value="cherry-blue">Cherry Blue</option>
+              <option value="cherry-brown">Cherry Brown</option>
+              <option value="typewriter">Typewriter</option>
+              <option value="bubble-wrap">Bubble Wrap</option>
+              <option value="solenoid">Solenoid Retro</option>
+              <option value="laser">Laser Cyber</option>
+              <option value="water">Water Droplet</option>
+            </select>
+          </div>
+
+          <!-- Volume Control -->
+          <div class="control-tab-group">
+            <span class="control-label-inline">Vol</span>
+            <input type="range" id="volumeSlider" class="compact-range" min="0" max="1" step="0.1" value="0.5">
+          </div>
+
+          <!-- Pitch Control -->
+          <div class="control-tab-group">
+            <span class="control-label-inline">Pitch</span>
+            <input type="range" id="pitchSlider" class="compact-range" min="0.5" max="1.5" step="0.1" value="1.0">
+          </div>
+
+          <!-- Theme Select -->
+          <div class="control-tab-group" aria-label="Theme selector">
+            <span class="control-label-inline"><svg viewBox="0 0 24 24"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg> Theme</span>
+            <select id="themeSelect" class="styled-select-inline">
+              <option value="carbon" selected>Carbon Dark</option>
+              <option value="cyberpunk">Cyberpunk Neon</option>
+              <option value="dracula">Dracula Vampire</option>
+              <option value="sunset">Sunset Glow</option>
+              <option value="retro">Retro Terminal</option>
+              <option value="nordic">Nordic Ice</option>
+            </select>
+          </div>
+
+          <!-- Zen Mode Toggle -->
+          <button id="zenModeToggle" class="icon-button" title="Zen Focus Mode (Toggle)" type="button">
+            <svg class="icon-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+            <span class="sr-only">Zen Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Advanced Level Progression Header -->
+      <section class="test-config-panel progression-panel">
+        <div class="progression-header">
+          <strong>Progression Level <span id="playerLvlValue">1</span></strong>
+          <span class="muted-text" id="xpTextValue">0 / 100 XP</span>
+        </div>
+        <div class="xp-level-bar">
+          <progress id="xpLevelFill" class="xp-level-fill" max="100" value="0">0%</progress>
+        </div>
+      </section>
+
+      <!-- Test Navigation / Config Strip -->
+      <section class="test-config-panel" aria-label="Test configuration">
+        <div class="config-tabs-row">
+          <!-- Modes Tab Group -->
+          <div class="config-group" id="modeConfigGroup">
+            <span class="config-label">Mode</span>
+            <div class="tab-pill-container" role="tablist">
+              <button class="tab-pill active" role="tab" aria-selected="true" data-mode="time" id="mode-time">Time</button>
+              <button class="tab-pill" role="tab" aria-selected="false" data-mode="words" id="mode-words">Words</button>
+              <button class="tab-pill" role="tab" aria-selected="false" data-mode="quote" id="mode-quote">Quote</button>
+            </div>
+          </div>
+
+          <!-- Difficulty selection -->
+          <div class="config-group">
+            <span class="config-label">Difficulty</span>
+            <select id="difficultySelect" class="styled-select">
+              <option value="normal" selected>Normal</option>
+              <option value="hardcore">Hardcore (1 Error Fails)</option>
+              <option value="master">Master (Fades Typed)</option>
+            </select>
+          </div>
+
+          <!-- Pace Car benchmark -->
+          <div class="config-group">
+            <span class="config-label">Pace Bench</span>
+            <select id="paceSelect" class="styled-select">
+              <option value="off" selected>Ghost Car Off</option>
+              <option value="60">60 WPM Target</option>
+              <option value="80">80 WPM Target</option>
+              <option value="100">100 WPM Target</option>
+              <option value="120">120 WPM Target</option>
+            </select>
+          </div>
+
+          <!-- Metronome Calibration -->
+          <div class="config-group">
+            <label class="config-label-select">
+              <input type="checkbox" id="metronomeToggle" class="accent-check">
+              <span>Metronome</span>
+            </label>
+            <input type="number" id="metronomeBpm" min="30" max="300" value="120" class="styled-select bpm-input">
+          </div>
+
+          <!-- Sub-config Options (Dynamically toggled) -->
+          <!-- Time Sub-config -->
+          <div class="config-group sub-config" id="configGroup-time">
+            <span class="config-label">Seconds</span>
+            <div class="tab-pill-container">
+              <button class="tab-pill mini" data-value="15">15</button>
+              <button class="tab-pill mini active" data-value="30">30</button>
+              <button class="tab-pill mini" data-value="60">60</button>
+              <button class="tab-pill mini" data-value="120">120</button>
+            </div>
+          </div>
+
+          <!-- Words Sub-config -->
+          <div class="config-group sub-config" id="configGroup-words" hidden>
+            <span class="config-label">Words Count</span>
+            <div class="tab-pill-container">
+              <button class="tab-pill mini" data-value="10">10</button>
+              <button class="tab-pill mini active" data-value="25">25</button>
+              <button class="tab-pill mini" data-value="50">50</button>
+              <button class="tab-pill mini" data-value="100">100</button>
+            </div>
+          </div>
+
+          <!-- Quotes Sub-config -->
+          <div class="config-group sub-config" id="configGroup-quote" hidden>
+            <label class="config-label-select">
+              <span>Passage Select</span>
+              <select id="passageSelect" class="styled-select"></select>
+            </label>
+          </div>
+        </div>
+
+        <!-- Custom Sandbox Paste input -->
+        <div class="sandbox-row">
+          <span class="config-label">Sandbox Custom text</span>
+          <input type="text" id="sandboxTextPaste" class="sandbox-input" placeholder="Paste custom paragraphs here to type on...">
+          <button type="button" id="sandboxApplyBtn" class="primary-button small">Apply</button>
+        </div>
+      </section>
+
+      <!-- Main Layout Workspace -->
+      <main class="workspace">
+        
+        <!-- TYPING ZONE -->
+        <section class="typing-panel" id="mainTypingPanel" aria-labelledby="typingTitle">
+          <div class="panel-heading">
+            <div>
+              <h2 id="typingTitle">Typing Lab</h2>
+              <p id="passageMeta" class="passage-meta-badge">Focus & Precision</p>
+            </div>
+            <div class="live-hud">
+              <!-- Streak counter -->
+              <span id="streakFireBadge" class="combo-badge-fire">0 🔥</span>
+              <div class="hud-metric">
+                <span class="hud-label">Time</span>
+                <span id="timeValue" class="hud-value">30.0s</span>
+              </div>
+              <div class="hud-metric">
+                <span class="hud-label">WPM</span>
+                <span id="netWpmValue" class="hud-value accent">0</span>
+              </div>
+              <div class="hud-metric">
+                <span class="hud-label">Acc</span>
+                <span id="accuracyValue" class="hud-value">100%</span>
+              </div>
+              <div class="hud-metric">
+                <span class="hud-label">Consistency</span>
+                <span id="consistencyValue" class="hud-value">100</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sparkline Canvas for Real-time graphing -->
+          <div class="sparkline-container" aria-hidden="true">
+            <canvas id="liveSparkline" width="600" height="40"></canvas>
+          </div>
+
+          <!-- Core Typing Canvas Area -->
+          <div class="typing-arena-container">
+            <!-- Particles FX Layer -->
+            <canvas id="particlesCanvas" class="particles-canvas-wrapper"></canvas>
+            
+            <!-- Blur overlay when out of focus -->
+            <div id="focusBlurOverlay" class="focus-blur-overlay">
+              <div class="blur-content">
+                <svg viewBox="0 0 24 24"><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/></svg>
+                <span>Click here or press any key to focus</span>
+              </div>
+            </div>
+
+            <!-- Target Text Block -->
+            <div id="targetText" class="target-text" aria-label="Target text to type">
+              <div id="caret" class="caret" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <!-- Hidden Input Area -->
+          <label class="sr-only" for="typingInput">Type the target text here</label>
+          <textarea
+            id="typingInput"
+            class="typing-input-hidden"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="Type here..."
+          ></textarea>
+
+          <div class="workbench-actions">
+            <button id="resetButton" class="secondary-button glow-hover" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.73-2.73"/></svg>
+              <span>Reset Test</span>
+            </button>
+            <button id="finishButton" class="primary-button glow-hover" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Finish Early</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- PROFILER & ANALYTICS BAR (Collapsible / Dynamic) -->
+        <aside id="profilerPanel" class="insight-panel" aria-labelledby="insightTitle">
+          <div class="panel-heading compact">
+            <div>
+              <h2 id="insightTitle">Dynamic Profiler</h2>
+              <p>Granular biometric typing diagnostics</p>
+            </div>
+          </div>
+          
+          <div id="metricGrid" class="metric-grid">
+            <!-- Dynamically populated cards -->
+          </div>
+          
+          <div class="mini-panel">
+            <h3>Weakest Key Areas</h3>
+            <ol id="weaknessList" class="weakness-list"></ol>
+          </div>
+          
+          <div class="mini-panel">
+            <h3>Biometric Feedback</h3>
+            <div id="feedbackList" class="feedback-list"></div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- RESULTS GLASS MODAL OVERLAY -->
+      <div id="resultsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="resultsTitle" hidden>
+        <div class="modal-card">
+          <div class="modal-header">
+            <h2 id="resultsTitle">Performance Diagnostic</h2>
+            <button id="closeResultsButton" class="modal-close-btn" aria-label="Close modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="results-layout-grid">
+              <!-- Big metrics display -->
+              <div class="big-metrics-strip">
+                <div class="giga-metric primary-glow">
+                  <span class="giga-label">Net WPM</span>
+                  <strong id="resNetWpm">72</strong>
+                  <span class="ai-badge" id="aiPredictValue">AI WPM Pred: --</span>
+                </div>
+                <div class="giga-metric">
+                  <span class="giga-label">Accuracy</span>
+                  <strong id="resAccuracy">98%</strong>
+                </div>
+                <div class="giga-metric">
+                  <span class="giga-label">Consistency</span>
+                  <strong id="resConsistency">84</strong>
+                </div>
+                <div class="giga-metric">
+                  <span class="giga-label">Key Mistakes</span>
+                  <strong id="resMistakes">4</strong>
+                </div>
+              </div>
+
+              <!-- Biometric workload Left vs Right hand index -->
+              <div class="details-card">
+                <h4>Biometric Hand Workloads</h4>
+                <div class="hand-workload-container">
+                  <div class="hand-gauge">
+                    <strong>Left Hand</strong>
+                    <div id="leftHandVal">50%</div>
+                        <div class="hand-gauge-bar">
+                          <progress id="leftHandFill" class="hand-gauge-fill" max="100" value="50">50%</progress>
+                        </div>
+                  </div>
+                  <div class="hand-gauge">
+                    <strong>Right Hand</strong>
+                    <div id="rightHandVal">50%</div>
+                        <div class="hand-gauge-bar">
+                          <progress id="rightHandFill" class="hand-gauge-fill right" max="100" value="50">50%</progress>
+                        </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main Canvas Graph -->
+              <div class="graph-section">
+                <h3>Speed & Stability Timeline</h3>
+                <div class="canvas-wrapper">
+                  <canvas id="wpmChart" width="600" height="220"></canvas>
+                </div>
+              </div>
+
+              <!-- Details Grid -->
+              <div class="results-details-grid">
+                <div class="details-card">
+                  <h4>Achievements & Badges</h4>
+                  <div class="badge-row" id="badgeRow">
+                    <!-- Dynamic SVG badges -->
+                  </div>
+                </div>
+
+                <div class="details-card">
+                  <h4>Targeted Training Drills</h4>
+                  <div id="modalExercises" class="modal-exercises-list">
+                    <!-- Recommended drills -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="modalResetBtn" class="primary-button glow-hover" type="button">Restart Test</button>
+            <button id="exportCsvBtn" class="secondary-button glow-hover" type="button">Export to CSV</button>
+            <button id="exportJsonBtn" class="secondary-button glow-hover" type="button">Export to JSON</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOWER GRID: VIRTUAL KEYBOARD, HISTORICAL ARCHIVES, MULTIPLAYER -->
+      <section class="lower-grid">
+        
+        <!-- VIRTUAL KEYBOARD -->
+        <section id="keyboardPanel" class="panel keyboard-panel" aria-labelledby="keyboardTitle">
+          <div class="panel-heading compact">
+            <div>
+              <h2 id="keyboardTitle">Virtual Keyboard Visualizer</h2>
+              <p>Real-time physical key mappings and keystroke heatmaps</p>
+            </div>
+          </div>
+
+          <!-- Extended layout and guide settings selectors -->
+          <div class="keyboard-options-row">
+            <label class="config-label-select">
+              <span>Layout Map</span>
+              <select id="kbLayoutSelect" class="styled-select">
+                <option value="qwerty" selected>QWERTY Standard</option>
+                <option value="dvorak">Dvorak Simplified</option>
+                <option value="colemak">Colemak Hybrid</option>
+              </select>
+            </label>
+            <label class="config-label-select">
+                  <input type="checkbox" id="kbFingerGuides" class="accent-check" checked>
+              <span>Show finger color guides</span>
+            </label>
+            <label class="config-label-select">
+                  <input type="checkbox" id="kbHeatmapToggle" class="accent-check" checked>
+              <span>Keystroke Heatmap overlay</span>
+            </label>
+            <button id="kbClearHeatmapBtn" class="ghost-button small text-danger" type="button">Reset Heatmap</button>
+          </div>
+          
+          <div class="keyboard-visualizer" id="visualKeyboardKeys">
+            <!-- Row 1 -->
+            <div class="keyboard-row">
+              <div class="key size-normal" data-key="`">&grave;</div>
+              <div class="key size-normal" data-key="1">1</div>
+              <div class="key size-normal" data-key="2">2</div>
+              <div class="key size-normal" data-key="3">3</div>
+              <div class="key size-normal" data-key="4">4</div>
+              <div class="key size-normal" data-key="5">5</div>
+              <div class="key size-normal" data-key="6">6</div>
+              <div class="key size-normal" data-key="7">7</div>
+              <div class="key size-normal" data-key="8">8</div>
+              <div class="key size-normal" data-key="9">9</div>
+              <div class="key size-normal" data-key="0">0</div>
+              <div class="key size-normal" data-key="-">-</div>
+              <div class="key size-normal" data-key="=">=</div>
+              <div class="key size-backspace size-grow" data-key="Backspace">Backspace</div>
+            </div>
+            <!-- Row 2 -->
+            <div class="keyboard-row">
+              <div class="key size-tab" data-key="Tab">Tab</div>
+              <div class="key size-normal" data-key="q">Q</div>
+              <div class="key size-normal" data-key="w">W</div>
+              <div class="key size-normal" data-key="e">E</div>
+              <div class="key size-normal" data-key="r">R</div>
+              <div class="key size-normal" data-key="t">T</div>
+              <div class="key size-normal" data-key="y">Y</div>
+              <div class="key size-normal" data-key="u">U</div>
+              <div class="key size-normal" data-key="i">I</div>
+              <div class="key size-normal" data-key="o">O</div>
+              <div class="key size-normal" data-key="p">P</div>
+              <div class="key size-normal" data-key="[">[</div>
+              <div class="key size-normal" data-key="]">]</div>
+              <div class="key size-normal" data-key="\">\</div>
+            </div>
+            <!-- Row 3 -->
+            <div class="keyboard-row">
+              <div class="key size-caps" data-key="CapsLock">Caps</div>
+              <div class="key size-normal" data-key="a">A</div>
+              <div class="key size-normal" data-key="s">S</div>
+              <div class="key size-normal" data-key="d">D</div>
+              <div class="key size-normal" data-key="f">F</div>
+              <div class="key size-normal" data-key="g">G</div>
+              <div class="key size-normal" data-key="h">H</div>
+              <div class="key size-normal" data-key="j">J</div>
+              <div class="key size-normal" data-key="k">K</div>
+              <div class="key size-normal" data-key="l">L</div>
+              <div class="key size-normal" data-key=";">;</div>
+              <div class="key size-normal" data-key="'">'</div>
+              <div class="key size-enter size-grow" data-key="Enter">Enter</div>
+            </div>
+            <!-- Row 4 -->
+            <div class="keyboard-row">
+              <div class="key size-lshift" data-key="Shift">Shift</div>
+              <div class="key size-normal" data-key="z">Z</div>
+              <div class="key size-normal" data-key="x">X</div>
+              <div class="key size-normal" data-key="c">C</div>
+              <div class="key size-normal" data-key="v">V</div>
+              <div class="key size-normal" data-key="b">B</div>
+              <div class="key size-normal" data-key="n">N</div>
+              <div class="key size-normal" data-key="m">M</div>
+              <div class="key size-normal" data-key=",">,</div>
+              <div class="key size-normal" data-key=".">.</div>
+              <div class="key size-normal" data-key="/">/</div>
+              <div class="key size-rshift" data-key="Shift">Shift</div>
+            </div>
+            <!-- Row 5 -->
+            <div class="keyboard-row">
+              <div class="key size-control" data-key="Control">Ctrl</div>
+              <div class="key size-alt" data-key="Alt">Alt</div>
+              <div class="key size-space" data-key=" ">Space</div>
+              <div class="key size-alt" data-key="Alt">Alt</div>
+              <div class="key size-control" data-key="Control">Ctrl</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MULTIPLAYER ARENA -->
+        <section id="multiplayerPanel" class="panel multiplayer-panel" aria-labelledby="multiplayerTitle">
+          <div class="panel-heading compact">
+            <div>
+              <h2 id="multiplayerTitle">Multiplayer Race Arena</h2>
+              <p id="networkInfo">Locating local servers...</p>
+            </div>
+            <div class="avatar-select-strip" id="avatarStrip">
+              <span class="config-label">Racer</span>
+              <!-- Dynamically rendered avatars -->
+            </div>
+          </div>
+
+          <!-- Competitive Racetrack (Visual Progress) -->
+          <div id="racetrackContainer" class="racetrack-container" hidden>
+            <h3>Live Racetrack</h3>
+            <div id="raceLanes" class="race-lanes">
+              <!-- Dynamically populated lanes with animated icons -->
+            </div>
+
+            <!-- Reaction emoji clicks bar -->
+                <div class="reaction-row">
+                  <span class="config-label reaction-label">Send Live Reaction</span>
+              <button type="button" class="avatar-bubble" data-send-reaction="🚀">🚀</button>
+              <button type="button" class="avatar-bubble" data-send-reaction="😂">😂</button>
+              <button type="button" class="avatar-bubble" data-send-reaction="😮">😮</button>
+              <button type="button" class="avatar-bubble" data-send-reaction="😡">😡</button>
+            </div>
+          </div>
+
+          <!-- Quick presets Chat Lobby Box -->
+              <div class="lobby-chat-box">
+                <span class="config-label lobby-chat-label">Lobby Chat Messages</span>
+                <div class="lobby-chat-buttons">
+              <button type="button" class="ghost-button small" data-lobby-chat="Good luck everyone! 🏁">Good luck everyone! 🏁</button>
+              <button type="button" class="ghost-button small" data-lobby-chat="Ready to speed run! ⚡">Ready to speed run! ⚡</button>
+              <button type="button" class="ghost-button small" data-lobby-chat="Nice keyboard! 💻">Nice keyboard! 💻</button>
+              <button type="button" class="ghost-button small" data-lobby-chat="Clean rhythm! 🔥">Clean rhythm! 🔥</button>
+            </div>
+            <ol id="roomMessageList" class="room-message-list" aria-live="polite">
+              <li>No room messages yet.</li>
+            </ol>
+          </div>
+
+          <div class="multiplayer-controls">
+            <div class="input-grid">
+              <label>
+                <span>Racer Name</span>
+                <input id="playerNameInput" maxlength="24" value="Typist" autocomplete="off">
+              </label>
+              <label>
+                <span>Active Room Code</span>
+                <input id="roomCodeInput" maxlength="8" autocomplete="off" placeholder="AB12CD">
+              </label>
+            </div>
+
+            <div class="lobby-actions">
+              <button id="hostButton" class="primary-button glow-hover" type="button">
+                <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Host Lobby
+              </button>
+              <button id="joinButton" class="secondary-button glow-hover" type="button">
+                <svg viewBox="0 0 24 24"><path d="M15 3h6v6M10 14L21 3M11 21H3V3h8"/></svg>
+                Join Lobby
+              </button>
+              <button id="startRoomButton" class="secondary-button glow-hover" type="button" disabled>
+                <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+                Start Race
+              </button>
+            </div>
+          </div>
+
+          <!-- Share Room Card -->
+          <div id="roomCard" class="room-card animate-slide-up" hidden>
+            <div class="room-card-content">
+              <span class="metric-label">Lobby Share URL</span>
+              <strong id="activeRoomCode">------</strong>
+            </div>
+            <button id="copyShareButton" class="primary-button small" type="button">Copy Invitation</button>
+          </div>
+
+          <div class="lobby-list-section">
+            <h3>Leaderboard & Lobby Roster</h3>
+            <ol id="leaderboard" class="leaderboard"></ol>
+          </div>
+        </section>
+
+        <!-- DRILLS & EXERCISES GENERATOR -->
+        <section id="exercisePanel" class="panel exercise-panel" aria-labelledby="exerciseTitle">
+          <div class="panel-heading compact">
+            <div>
+              <h2 id="exerciseTitle">Targeted Calibration Drills</h2>
+              <p>Custom exercises synthesized to tackle your specific biometric weaknesses</p>
+            </div>
+          </div>
+              <div id="exerciseList" class="exercise-list">
+                <!-- Dynamic drills -->
+              </div>
+              <div class="training-plan-card">
+                <h3>7-Day Training Plan</h3>
+                <div id="trainingPlanList" class="training-plan-list"></div>
+              </div>
+            </section>
+
+        <!-- ARCHIVES & METADATA PROGRESSION (History) -->
+        <section id="historyPanel" class="panel history-panel" aria-labelledby="historyTitle">
+          <div class="panel-heading compact">
+            <div>
+              <h2 id="historyTitle">Personal Typing History</h2>
+              <p>Track your speeds, accuracies, and long-term milestones</p>
+            </div>
+              <div class="history-actions">
+                <input id="historyImportInput" class="file-input-hidden" type="file" accept="application/json">
+                <button id="adaptivePracticeBtn" class="ghost-button small" type="button">Adaptive Practice</button>
+                <button id="exportReportBtn" class="ghost-button small" type="button">Coach Report</button>
+                <button id="importHistoryBtn" class="ghost-button small" type="button">Import Logs</button>
+                <button id="clearHistoryBtn" class="ghost-button small text-danger" type="button">Purge Logs</button>
+              </div>
+          </div>
+          <div class="coach-profile-card" aria-label="Personal coach profile">
+            <h3>Personal Coach Profile</h3>
+            <div id="coachProfileList" class="coach-profile-list"></div>
+          </div>
+          <div class="history-table-wrapper">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Mode</th>
+                  <th>Speed</th>
+                  <th>Acc</th>
+                  <th>Stability</th>
+                  <th>Key Mistakes</th>
+                </tr>
+              </thead>
+              <tbody id="historyList">
+                <!-- Historic rows -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <p>&copy; 2026 TypeSpeed.io Arena. Made for elite keyboard mechanics.</p>
+      </footer>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

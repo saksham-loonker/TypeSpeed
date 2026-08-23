@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">TypeSpeed icon</title>
+  <desc id="desc">A compact TS monogram on a dark typing dashboard badge.</desc>
+  <rect width="512" height="512" rx="96" fill="#111216"/>
+  <path d="M96 152h320v64H288v184h-64V216H96z" fill="#f8fafc"/>
+  <path d="M150 344c31 24 68 36 110 36 47 0 74-13 74-36 0-17-15-27-52-33l-55-9c-61-10-92-36-92-79 0-53 47-87 122-87 47 0 88 11 123 33l-30 52c-28-17-59-25-93-25-35 0-55 10-55 28 0 16 15 25 51 31l57 9c62 10 93 36 93 80 0 57-52 94-137 94-59 0-109-15-150-45z" fill="#10b981"/>
+  <path d="M98 420h316" stroke="#38bdf8" stroke-width="18" stroke-linecap="round"/>
+</svg>

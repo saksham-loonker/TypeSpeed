@@ -1,0 +1,18 @@
+{
+  "name": "TypeSpeed Typing Lab",
+  "short_name": "TypeSpeed",
+  "description": "Local-first typing diagnostics, targeted drills, and LAN room-code races from your own laptop.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#111216",
+  "theme_color": "#111216",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

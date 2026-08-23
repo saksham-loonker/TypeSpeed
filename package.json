@@ -1,0 +1,15 @@
+{
+  "name": "typespeed",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/app.js && node --check public/service-worker.js && node --check src/typingAnalysis.js && node --check src/roomStore.js && node --check src/passages.js && node --check src/trainingPlan.js && node --check src/profileCoach.js && node --check src/historyArchive.js && node --check src/coachReport.js && node --check src/adaptivePractice.js && node --check src/keyboardModel.js && node --check src/sessionRules.js",
+    "test": "node --test tests/*.test.js",
+    "verify": "npm.cmd run check && npm.cmd test && npm.cmd audit --audit-level=high"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
